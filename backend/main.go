@@ -13,8 +13,15 @@ import (
 
 func main() {
 	// Load environment variables
-	if err := godotenv.Load("config.env"); err != nil {
-		log.Println("No .env file found, using system environment variables")
+	env := os.Getenv("ENV")
+	if env == "production" {
+		if err := godotenv.Load("config.production.env"); err != nil {
+			log.Println("No production config file found, using system environment variables")
+		}
+	} else {
+		if err := godotenv.Load("config.env"); err != nil {
+			log.Println("No .env file found, using system environment variables")
+		}
 	}
 
 	// Connect to database
@@ -35,7 +42,7 @@ func main() {
 
 	// Configure CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173, http://localhost:3000",
+		AllowOrigins: "http://localhost:5173, http://localhost:3000, https://pawfectfriends.xyz, https://www.pawfectfriends.xyz",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 		AllowMethods: "GET, POST, PUT, DELETE",
 	}))
